@@ -1,7 +1,9 @@
 import { Type, IndexedProperties, Schema } from "./Schema.js";
 import { DeepReadonly, Simplify, StringKeyof } from "../common/types.js";
+import { Records } from "./DataSource.js";
+import { Patch } from "./Patch.js";
 
-export const operators = {
+const operators = {
     "<": <T extends number | string>(a: T | T[], b: T) => Array.isArray(a) ? a.some(a => a < b) : a < b,
     ">": <T extends number | string>(a: T | T[], b: T) => Array.isArray(a) ? a.some(a => a > b) : a > b,
     "<=": <T extends number | string>(a: T | T[], b: T) => Array.isArray(a) ? a.some(a => a <= b) : a <= b,
@@ -22,7 +24,13 @@ export type Constraints<T> = Readonly<{
     | { [O in ValidOperations<T[K]>]?: Scalar<T[K]> }
 }>;
 
-export type Sort<T extends string> = Simplify<Readonly<{
+export type Sort<T extends string> = {
+    order: Order<T>;
+    offset?: number;
+    count?: number;
+}
+
+export type Order<T extends string> = Simplify<Readonly<{
     [K in T]?: boolean;
 }>>;
 
@@ -36,17 +44,15 @@ export type Query<
     ID extends string = S["id"],
 > = DeepReadonly<{
     type: ID;
-    sort?: Sort<Indexes<S>>;
     where?: Constraints<IndexedProperties<S>>;
-    offset?: number;
-    count?: number;
+    sort?: Sort<Indexes<S>>;
     select?: P;
 }>;
 
 export type SelectQuery<S extends Schema, T = Type<S>, P extends ReadonlyArray<keyof T> = ReadonlyArray<keyof T>>
     = Query<S, T, P> & Readonly<{ select: P }>
 
-export function doesDocumentSatisfyConstraints<S extends Schema>(record: any, constraints?: Constraints<IndexedProperties<S>>) {
+export function doesRecordSatisfyConstraints(record: any, constraints?: Constraints<unknown>) {
     if (constraints) {
         for (let [name, value] of Object.entries(constraints)) {
             if (value != null && typeof value === "object") {
@@ -63,29 +69,4 @@ export function doesDocumentSatisfyConstraints<S extends Schema>(record: any, co
         }
     }
     return true;
-}
-
-export function createSortFunction<S extends Schema, T extends Type<S> = Type<S>>(sort: Sort<Indexes<S>>) {
-    return (a: any, b: any) => {
-        for (let [property, direction] of Object.entries(sort)) {
-            let order = compare(a[property], b[property]);
-            if (order !== 0) {
-                return direction ? order : -order;
-            }
-        }
-        return 0;
-    }
-}
-
-export function compare(a: any, b: any) {
-    if (a === b) {
-        return 0;
-    }
-    if (a == null) {
-        return -1;
-    }
-    if (b == null) {
-        return +1;
-    }
-    return a < b ? -1 : +1;
 }
