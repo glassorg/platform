@@ -1,0 +1,28 @@
+{
+  "name": "platform",
+  "version": "0.0.0",
+  "description": "Glass Web Platform",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "run-p watch:*",
+    "watch:build": "tsc -w --preserveWatchOutput",
+    "watch:test": "vitest watch src",
+    "watch-web": "vite web --port 8080",
+    "test": "vitest run src"
+  },
+  "devDependencies": {
+    "@types/json-schema": "^7.0.12",
+    "@types/node": "^20.4.8",
+    "fake-indexeddb": "^4.0.2",
+    "json-schema": "^0.4.0",
+    "npm-run-all": "^4.1.5",
+    "puppeteer": "^21.0.2",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1",
+    "vite": "^4.3.9"
+  },
+  "author": "krisnye@gmail.com",
+  "license": "MIT"
+}
