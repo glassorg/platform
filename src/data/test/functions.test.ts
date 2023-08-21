@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { clone, isAlreadySorted, mergePatch, normalizeKeyOrder } from './functions.js';
+import { clone, isAlreadySorted, mergePatch, normalizeKeyOrder } from '../functions.js';
 
 describe(`clone`, () => {
     test(`should copy objects`, async () => {

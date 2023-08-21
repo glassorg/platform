@@ -8,6 +8,7 @@ type PatchObject<T extends object> =
     };
 
 export type Patch<T> =
+    T |
     (
         T extends Primitive | Blob ? T :
         T extends {} /*  | ReadonlyArray<unknown> | ReadonlySet<unknown> | ReadonlyMap<unknown, unknown> */ ? PatchObject<T> :

@@ -43,9 +43,10 @@ export type FieldsNotInProperty<D extends Schema, P extends "indexes" | "primary
     ? { [K in keyof D["properties"]]: K extends D[P][number] ? never : K }[keyof D["properties"]]
     : keyof D["properties"];
 
-export type RequiredProperties<D extends Schema> = Pick<BaseType<D>, FieldsInProperty<D, "required"> | FieldsInProperty<D, "primaryKeys">>;
+export type RequiredProperties<D extends Schema> = Pick<BaseType<D>, FieldsInProperty<D, "required">>;
 export type OptionalProperties<D extends Schema> = Partial<Pick<BaseType<D>, FieldsNotInProperty<D, "required">>>;
 export type PrimaryKeyProperties<D extends Schema> = Pick<BaseType<D>, FieldsInProperty<D, "primaryKeys">>;
 export type IndexedProperties<D extends Schema> = Pick<BaseType<D>, FieldsInProperty<D, "indexes"> | FieldsInProperty<D, "primaryKeys">>;
 
-export type Type<D extends Schema> = object & Simplify<RequiredProperties<D> & OptionalProperties<D>>;
+export type Type<D extends Schema> = object & Simplify<PrimaryKeyProperties<D> & RequiredProperties<D> & OptionalProperties<D>>;
+export type Create<D extends Schema> = object & Simplify<Partial<PrimaryKeyProperties<D>> & RequiredProperties<D> & OptionalProperties<D>>;

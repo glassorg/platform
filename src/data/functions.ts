@@ -1,4 +1,4 @@
-import { Records } from "./DataSource.js";
+import { Results } from "./DataSource.js";
 import { Patch } from "./Patch.js";
 import { Constraints, Indexes, Sort, doesRecordSatisfyConstraints } from "./Query.js";
 import { Schema, Type } from "./Schema.js";
@@ -41,12 +41,15 @@ export function normalizeKeyOrder(target: any) {
 }
 
 export function mergePatch(target: any, patch: any, preserveNulls = false, mutateTarget = false) {
+    if (patch === undefined) {
+        return target;
+    }
     if (patch === null) {
         //  delete target
         return null;
     }
     if (target == null || typeof patch !== "object" || Array.isArray(patch)) {
-        return target;
+        return patch;
     }
     let result: any = null;
     for (let name in patch) {
@@ -67,8 +70,8 @@ export function mergePatch(target: any, patch: any, preserveNulls = false, mutat
     return result ?? target;
 }
 
-export function filterRecords<S extends Schema>(records: Records<Type<S>>, constraints?: Constraints<unknown>): Records<Type<S>> {
-    const results: Records<Type<S>> = {};
+export function filterRecords<S extends Schema>(records: Results<Type<S>>, constraints?: Constraints<unknown>): Results<Type<S>> {
+    const results: Results<Type<S>> = {};
     for (let [key, value] of Object.entries(records)) {
         if (doesRecordSatisfyConstraints(value as any, constraints)) {
             results[key] = value;
@@ -102,7 +105,7 @@ export function compare(a: any, b: any) {
     return a < b ? -1 : +1;
 }
 
-export function getFilteredPatch(records: Records, patch: Patch<any>, constraints: Constraints<unknown>) {
+export function getFilteredPatch(records: Results, patch: Patch<any>, constraints: Constraints<unknown>) {
     const filteredPatch: Patch<any> = {};
 
     //  if child *becomes* filtered out, remove
@@ -131,6 +134,6 @@ export function getFilteredPatch(records: Records, patch: Patch<any>, constraint
 
     return filteredPatch;
 }
-export function getPrimaryKey({ primaryKeys }: Schema, record: any) {
+export function getPrimaryKey({ primaryKeys }: Schema, record: any): any {
     return primaryKeys.length === 1 ? (record as any)[primaryKeys[0] as any] : primaryKeys.map(name => (record as any)[name]).join(",");
 }

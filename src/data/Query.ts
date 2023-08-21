@@ -1,7 +1,5 @@
 import { Type, IndexedProperties, Schema } from "./Schema.js";
 import { DeepReadonly, Simplify, StringKeyof } from "../common/types.js";
-import { Records } from "./DataSource.js";
-import { Patch } from "./Patch.js";
 
 const operators = {
     "<": <T extends number | string>(a: T | T[], b: T) => Array.isArray(a) ? a.some(a => a < b) : a < b,
