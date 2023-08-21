@@ -5,15 +5,6 @@ import { Patch } from "./Patch.js";
 import { filterRecords, getFilteredPatch, mergePatch } from "./functions.js";
 import { getPrimaryKey } from "./functions.js";
 
-// interface IDataTable<S extends Schema, T extends string = S["id"]> extends DataSource<T> {
-//     type: T;
-//     peek(request: { type: T, id: string }): Type<S> | undefined;
-//     read(request: { type: T, id: string }, watcher: Watcher<Type<S> | null>): Unwatch;
-//     read(request: { type: T } & Query<S>, watcher: Watcher<Type<S>[]>): Unwatch;
-//     create(request: { type: T, value: Create<S> }): Promise<Type<S>>;
-//     patch(request: { type: T, id: string, patch: Patch<Type<S>> | null }): void;
-// }
-
 class DataView<S extends Schema> {
     private watchers = new Set<Watcher<Results<Type<S>>>>;
     public mutableUpdates?: Patch<Results<Type<S>>>;
@@ -24,7 +15,6 @@ class DataView<S extends Schema> {
     }
 
     public update(patch: Patch<Results<Type<S>>>) {
-        console.log("----- update", patch);
         this.mutableUpdates = mergePatch(this.mutableUpdates ?? {}, patch, true, true);
     }
 
@@ -95,7 +85,6 @@ export class DataTable<S extends Schema, T extends string = S["id"]> extends Dat
     async create(request: { type: T, value: Create<S> }): Promise<Type<S>> {
         let { type, value } = request;
         let primaryKey = getPrimaryKey(this.schema, value);
-        console.log({ primaryKey });
         if (!primaryKey) {
             primaryKey = `${++this.createdCount}`;
             value = { ...value, [this.schema.primaryKeys[0]]: primaryKey };
@@ -104,8 +93,8 @@ export class DataTable<S extends Schema, T extends string = S["id"]> extends Dat
         return value as Type<S>;
     }
 
-    peek(request: { type: T, id: string }): Type<S> | null {
-        return this.mutableRecords[request.id];
+    peek(request: { type: T, id: string }): Type<S> | undefined {
+        return this.mutableRecords[request.id] ?? undefined;
     }
 
     watch(request: { type?: T, id: string }, watcher: Watcher<Type<S> | null>): Unwatch;
