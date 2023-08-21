@@ -1,5 +1,5 @@
 import { Constraints, Query } from "./Query.js";
-import { Schema, Type } from "./Schema.js";
+import { Create, Schema, Type } from "./Schema.js";
 import { Results, Unwatch, Watcher } from "./DataSource.js";
 import { Patch } from "./Patch.js";
 import { filterRecords, getFilteredPatch, mergePatch } from "./functions.js";
@@ -92,7 +92,7 @@ export class DataTable<S extends Schema, T extends string = S["id"]> extends Dat
         }
     }
 
-    async create(request: { type: T, value: Type<S> }): Promise<Type<S>> {
+    async create(request: { type: T, value: Create<S> }): Promise<Type<S>> {
         let { type, value } = request;
         let primaryKey = getPrimaryKey(this.schema, value);
         console.log({ primaryKey });
@@ -100,17 +100,17 @@ export class DataTable<S extends Schema, T extends string = S["id"]> extends Dat
             primaryKey = `${++this.createdCount}`;
             value = { ...value, [this.schema.primaryKeys[0]]: primaryKey };
         }
-        this.patch({ type, id: primaryKey, patch: value });
-        return value;
+        this.patch({ type, id: primaryKey, patch: value as Type<S> });
+        return value as Type<S>;
     }
 
-    peek(request: { type: T, id: string }): Type<S> | undefined {
+    peek(request: { type: T, id: string }): Type<S> | null {
         return this.mutableRecords[request.id];
     }
 
-    watch(request: { type: T, id: string }, watcher: Watcher<Type<S> | null>): Unwatch;
-    watch(request: { type: T } & Query<S>, watcher: Watcher<Results<Type<S>>>): Unwatch;
-    watch(request: { type: T, id: string } & Query<S>, watcher: any) {
+    watch(request: { type?: T, id: string }, watcher: Watcher<Type<S> | null>): Unwatch;
+    watch(request: { type?: T } & Query<S>, watcher: Watcher<Results<Type<S>>>): Unwatch;
+    watch(request: { type?: T, id: string } & Query<S>, watcher: any) {
         if (request.id) {
             throw new Error("Not implemented get");
         }

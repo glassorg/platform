@@ -5,7 +5,7 @@ export const personSchema = {
     id: "sample:Person",
     type: "object",
     primaryKeys: ["name"],
-    required: ["name", "age", "gender"],
+    required: ["age", "gender"],
     indexes: ["age", "luckyNumbers"],
     properties: {
         type: {
@@ -70,11 +70,9 @@ type PersonIndexedProperties = IndexedProperties<typeof personSchema>;
 
 // this verifies at compile time that are types are what we expect them to be.
 type CompileTimeTypeCheck = Extends<PersonRequiredProperties, {
-    name: string;
     age: number;
     gender: "male" | "female" | "other";
 }> & Extends<{
-    name: string;
     age: number;
     gender: "male" | "female" | "other";
 }, PersonRequiredProperties> & Extends<Required<PersonOptionalProperties>, {
@@ -93,6 +91,7 @@ type CompileTimeTypeCheck = Extends<PersonRequiredProperties, {
     picture: File,
 }> & Extends<{
     type: string;
+    name: string;
     values: 1 | 3 | 5 | 7;
     position: {
         x: number;

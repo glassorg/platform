@@ -1,3 +1,4 @@
+import { Simplify } from "../common/types.js";
 import { Patch } from "./Patch.js";
 
 export type Watcher<T = unknown> = (patch: Patch<T>) => void;
@@ -7,6 +8,7 @@ export type Results<T = unknown> = Record<string, T>;
 
 export interface DataSource<T extends string = string> {
     type?: T;
+    peek(request: Request<T>): any;
     watch(request: Request<T>, watcher: Watcher<Results>): Unwatch;
     patch?(request: Request<T>): void;
     applyPatchesAndNotify(): void;
@@ -20,5 +22,5 @@ export type DataSourceWithTypeFunctions<DS extends DataSource> =
 
 export type WithType<F, T> =
     F extends (a: infer A, ...b: (infer B)) => infer C ?
-    (a: A & { type: T }, ...b: B) => C
+    (a: Simplify<A & { type: T }>, ...b: B) => C
     : T;

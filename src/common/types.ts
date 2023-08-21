@@ -20,7 +20,7 @@ export type DeepReadonly<T> =
     : Readonly<T>;
 
 export type Simplify<T> =
-    T extends Primitive | TypedArray | Blob ? T :
+    T extends Primitive | TypedArray | Blob | Function ? T :
     T extends Array<infer A> ? Array<Simplify<A>> :
     T extends Set<infer A> ? Set<Simplify<A>> :
     T extends Map<infer A, infer B> ? Map<Simplify<A>, Simplify<B>> :
