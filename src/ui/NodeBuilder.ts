@@ -1,8 +1,12 @@
+import { assignIfDifferent } from "../common/functions.js";
+import { INode } from "./INode.js";
+import { NodeWriter } from "./NodeWriter.js";
+import { NodeType } from "./NodeType.js";
 
 export class NodeBuilder<T = HTMLElement> {
 
     constructor(
-        public readonly type: string | Function,
+        public readonly type: NodeType,
         public readonly properties: Record<string, any>,
         public readonly children: (NodeBuilder | string)[],
         public readonly style?: Partial<CSSStyleDeclaration>,
@@ -11,30 +15,56 @@ export class NodeBuilder<T = HTMLElement> {
     }
 
     apply(to: HTMLElement) {
-        to.replaceChildren();
-        to.appendChild(this.toElement());
+        let pointer = new NodeWriter(to);
+        function renderNode(builder: NodeBuilder) {
+            const node = pointer.begin(builder.type);
+            builder.applyProperties(node);
+            for (let i = 0; i < builder.children.length; i++) {
+                let child = builder.children[i];
+                let node: INode;
+                if (typeof child === "string") {
+                    pointer.text(child);
+                }
+                else {
+                    renderNode(child);
+                }
+            }
+            pointer.end();
+        }
+
+        renderNode(this);
+
+        // to.replaceChildren();
+        // to.appendChild(this.toElement());
+
+    }
+
+    private applyProperties(to: INode) {
+        if (to instanceof HTMLElement) {
+            if (this.attributes) {
+                for (let name in this.attributes) {
+                    let value = this.attributes[name];
+                    if (value === false) {
+                        to.removeAttribute(name);
+                    }
+                    else {
+                        to.setAttribute(name, value === true ? "" : value);
+                    }
+                }
+            }
+            if (this.style) {
+                assignIfDifferent(to.style, this.style);
+            }
+        }
+        if (this.properties) {
+            assignIfDifferent(to, this.properties);
+        }
     }
 
     private toElement() {
         const { type } = this;
         let element = typeof type === "function" ? new (type as any)() : document.createElement(type);
-        if (this.attributes) {
-            for (let name in this.attributes) {
-                let value = this.attributes[name];
-                if (value === false) {
-                    element.removeAttribute(name);
-                }
-                else {
-                    element.setAttribute(name, value === true ? "" : value);
-                }
-            }
-        }
-        if (this.properties) {
-            Object.assign(element, this.properties);
-        }
-        if (this.style) {
-            Object.assign(element.style, this.style);
-        }
+        this.applyProperties(element);
         if (this.children) {
             for (let child of this.children) {
                 element.appendChild(typeof child === "string" ? document.createTextNode(child) : child.toElement());
@@ -74,7 +104,9 @@ export function element<E extends { className?: string }, C extends string | Nod
     ) {
         if (isPropertiesAndAttributes<E>(props)) {
             const { class: className, style, attributes, ...properties } = props;
-            properties.className = className;
+            if (className) {
+                properties.className = className;
+            }
             return new NodeBuilder(typeName, properties, children, style, attributes);
         }
         else {

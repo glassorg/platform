@@ -1,3 +1,4 @@
+import { requestFrame } from "../common/requestFrame.js";
 import { NodeBuilder } from "./NodeBuilder.js";
 
 export abstract class WebComponent extends HTMLElement {
@@ -8,25 +9,32 @@ export abstract class WebComponent extends HTMLElement {
     constructor() {
         super();
         this.hooks = [];
+        this.renderAndApply = this.renderAndApply.bind(this);
+        console.log(`${this.tagName}.constructor`);
     }
 
     public invalidate() {
-        // for now just immediately rerender.
-        this.renderAndApply();
+        requestFrame(this.renderAndApply);
+        console.log(`${this.tagName}.invalidate`);
     }
 
     connectedCallback() {
-        this.renderAndApply();
+        console.log(`${this.tagName}.connectedCallback`);
+        this.invalidate();
     }
 
     disconnectedCallback() {
+        console.log(`${this.tagName}.disconnectedCallback`);
     }
 
     attributeChangedCallback() {
-        this.renderAndApply();
+        console.log(`${this.tagName}.attributeChangedCallback`);
+        this.invalidate();
     }
 
     private renderAndApply() {
+        console.log(`${this.tagName}.renderAndApply`);
+
         this.hookIndex = 0;
         WebComponent.renderStack.push(this);
         try {

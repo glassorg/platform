@@ -2,15 +2,14 @@ import { NodeBuilder } from "./NodeBuilder.js";
 import { WebComponent } from "./WebComponent.js";
 
 let defineCount = 0;
-export function component<
-    Props extends Record<string, any>
->(
+export function component<Props extends Record<string, any>>(
     render: ((props: Props) => NodeBuilder),
-    tagName = `component-${defineCount++}`
+    tagName = `component-${defineCount++}`,
 ) {
     class FunctionalWebComponent extends WebComponent {
         declare properties: Props;
         render(): NodeBuilder {
+            console.log(`render ${tagName}`);
             return render.call(this, this.properties);
         }
     }
@@ -19,6 +18,6 @@ export function component<
     customElements.define(tagName, FunctionalWebComponent);
 
     return function ({ style, ...props }: Omit<Props, "children"> & { style?: CSSStyleDeclaration }, ...children: Props["children"]) {
-        return new NodeBuilder(FunctionalWebComponent, { properties: { ...props, children } }, children, style);
+        return new NodeBuilder(FunctionalWebComponent, { properties: { ...props, children } }, [], style);
     };
 }
