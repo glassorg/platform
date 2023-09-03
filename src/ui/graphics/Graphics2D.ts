@@ -90,7 +90,7 @@ export default class Graphics2D extends Graphics {
 
     invalidate() {
         let canvas = this.context.canvas as any
-        canvas.dirty = true
+        canvas.isDirty = true
     }
 
     fillRectangle(x: number, y: number, width: number, height: number, color: Color, texture) {

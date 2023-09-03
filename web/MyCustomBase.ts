@@ -1,9 +1,10 @@
-import { WebComponent } from "../src/ui/WebComponent.js";
-import { button, div, li, ul } from "../src/ui/NodeBuilder.js";
-import { useState } from "../src/ui/hooks.js";
-import { helloComponent } from "./HelloComponent.js";
+import { getWebComponentClass } from "../src/ui/html/WebComponent.js";
+import { button, div, li, ul } from "../src/ui/html/elements.js";
+import { useState } from "../src/ui/hooks/useState.js";
+import { helloElement } from "./HelloElement.js";
+// import { helloComponent } from "./HelloComponent.js";
 
-export class MyCustomBase extends WebComponent {
+export class MyCustomBase extends getWebComponentClass() {
 
     render() {
         const [count, setCount] = useState(0);
@@ -14,11 +15,13 @@ export class MyCustomBase extends WebComponent {
                     li({ style: { color: "red" } }, "Foo"),
                     li({ style: { color: "blue" } }, "Bar"),
                 ),
-                helloComponent({ name }, "foo"),
+                helloElement({ name }, "child thing here"),
                 button({
                     onclick(e) {
                         setCount(count + 1);
-                        setName(name + "!");
+                        if (count % 3 === 0) {
+                            setName(name + "!");
+                        }
                     }
                 }, `Clicked ${count}`),
             )

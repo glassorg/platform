@@ -1,7 +1,7 @@
 import Shader from "./Shader.js"
 import VertexFormat from "./VertexFormat.js"
 import Primitive from "./Primitive.js"
-import "../../GlobalTypes.js"
+import "../../types.js"
 
 export default class VertexShader extends Shader {
 

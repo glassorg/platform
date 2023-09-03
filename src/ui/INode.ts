@@ -1,8 +1,10 @@
+import { NodeName } from "./NodeTypes.js";
 
 export interface INode {
-    nodeName?: string;
+    //  Type properties from DOM Node.
+    nodeName: NodeName;
 
-    //  Composition methods compatible with Html Node
+    //  Composition functions compatible with DOM Node
     appendChild(child: INode);
     removeChild(child: INode);
     insertBefore(child: INode, ref?: INode | null);
@@ -12,12 +14,11 @@ export interface INode {
     nextSibling: INode | null;
     previousSibling: INode | null;
 
-    //  text
-    // createTextNode?: (text: string) => INode;
-
-    //  invalidation
-    dirty?: boolean;
+    //  Does this node need to repaint?
+    isDirty?: boolean;
+    //  Is this a component that manages it's own properties and children?
+    isComponent?: boolean;
+    //  Is this node a virtual node?
+    isVirtual?: boolean;
 
 }
-
-// (HTMLElement.prototype as INode).createTextNode = (text: string) => document.createTextNode(text);

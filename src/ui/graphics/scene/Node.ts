@@ -1,4 +1,4 @@
-import VirtualNode from "../../VirtualNode.js"
+import VirtualNode from "../../temporary/VirtualNode.js"
 import Graphics from "../Graphics.js"
 import Capsule from "../../math/Capsule.js"
 import BoundingShape from "../../math/BoundingShape.js"
@@ -94,7 +94,7 @@ export default class Node extends VirtualNode {
         else {
             this._effect.render(g as any, this.draw.bind(this))
         }
-        this.dirty = false
+        this.isDirty = false
         g.uniforms.modelView = saveTransform
     }
 

@@ -82,7 +82,7 @@ export default class Graphics3D extends Graphics {
 
     invalidate() {
         let canvas = this.gl.canvas as any
-        canvas.dirty = true
+        canvas.isDirty = true
     }
 
     private cachedTextures: { [name: string]: Texture } = {}

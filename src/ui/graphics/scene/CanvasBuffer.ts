@@ -38,7 +38,7 @@ export default class CanvasBuffer extends Control {
             this.canvas.height = this.height
         }
         // re-rendering needs to be friggin asynchronous!
-        if (this.dirty || resize) {
+        if (this.isDirty || resize) {
             let context = this.canvas.getContext("2d") as CanvasRenderingContext2D
             let subG = new Graphics2D(context)
             //  draw kids on the canvas

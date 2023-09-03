@@ -1,5 +1,6 @@
-import { INode } from "./INode.js"
-import Invalidatable from "./graphics/Invalidatable.js"
+import { INode } from "../INode.js";
+import { NodeName } from "../NodeTypes.js";
+import Invalidatable from "../graphics/Invalidatable.js"
 
 export function extendElementAsVirtualNodeRoot<T>(element: T): T & INode {
     return Object.defineProperties(element, {
@@ -23,7 +24,7 @@ export function extendElementAsVirtualNodeRoot<T>(element: T): T & INode {
     }) as any;
 }
 
-export default class VirtualNode implements INode, Invalidatable {
+export default abstract class VirtualNode implements INode, Invalidatable {
 
     id?: string
     parentNode: INode | null = null
@@ -33,7 +34,11 @@ export default class VirtualNode implements INode, Invalidatable {
     previousSibling: INode | null = null
 
     properties?: any
-    dirty: boolean = false
+    isDirty: boolean = false
+
+    get nodeName(): NodeName {
+        return "virtual-node" as NodeName;
+    }
 
     // composition methods compatible with Html Node
     appendChild<T extends INode>(child: T): T {
@@ -92,8 +97,8 @@ export default class VirtualNode implements INode, Invalidatable {
     }
 
     invalidate() {
-        for (let node: INode | null = this; node != null && node.dirty === false; node = node.parentNode) {
-            node.dirty = true
+        for (let node: INode | null = this; node != null && node.isDirty === false; node = node.parentNode) {
+            node.isDirty = true
         }
     }
 
