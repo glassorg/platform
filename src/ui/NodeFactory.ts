@@ -7,11 +7,11 @@ export abstract class NodeFactory<Name extends NodeName = NodeName> {
         Object.assign(to, properties);
     }
 
+    public static defaultFactory?: NodeFactory;
     private static factoryMap = new Map<string, NodeFactory>();
     public static registerFactory(names: ReadonlyArray<string>, factory: NodeFactory) {
         for (let name of names) {
             if (this.factoryMap.has(name)) {
-                debugger;
                 throw new Error(`Already registered: ${name}`);
             }
             this.factoryMap.set(name, factory);
@@ -19,7 +19,7 @@ export abstract class NodeFactory<Name extends NodeName = NodeName> {
     }
 
     public static getFactory<Name extends NodeName>(name: Name): NodeFactory<Name> {
-        const factory = this.factoryMap.get(name);
+        const factory = this.factoryMap.get(name) ?? this.defaultFactory;
         if (!factory) {
             throw new Error(`No factory: ${name}`);
         }

@@ -2,9 +2,9 @@ import { getWebComponentClass } from "../src/ui/html/WebComponent.js";
 import { button, div, li, ul } from "../src/ui/html/elements.js";
 import { useState } from "../src/ui/hooks/useState.js";
 import { helloElement } from "./HelloElement.js";
-// import { helloComponent } from "./HelloComponent.js";
+import { NodeBlueprint } from "../src/ui/NodeBlueprint.js";
 
-export class MyCustomBase extends getWebComponentClass() {
+export class MyClassElement extends getWebComponentClass() {
 
     render() {
         const [count, setCount] = useState(0);
@@ -27,6 +27,22 @@ export class MyCustomBase extends getWebComponentClass() {
             )
         );
     }
-
 }
-customElements.define("my-custom-base", MyCustomBase);
+const myCustomBaseTagName = "my-class-element";
+customElements.define(myCustomBaseTagName, MyClassElement);
+
+declare module "../src/ui/NodeTypes.js" {
+    export interface NodeNameToType {
+        [myCustomBaseTagName]: MyClassElement
+    }
+    export interface NodeNameToProperties {
+        [myCustomBaseTagName]: {}
+    }
+    export interface NodeNameToChildName {
+        [myCustomBaseTagName]: never
+    }
+}
+
+export function myClassElement() {
+    return new NodeBlueprint(myCustomBaseTagName);
+}

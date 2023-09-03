@@ -38,8 +38,8 @@ export function customElement<Props extends Record<string, any>, Name extends HT
     //  this must be called before a webcomponent can be constructed or you get an Illegal constructor error
     customElements.define(tagName, FunctionalWebComponent, { extends: options.extends });
 
-    //  register factory as well
-    NodeFactory.registerFactory([tagName], HTMLElementFactory.instance);
+    //  register factory as well. no longer need this since there is a default html node factory
+    // NodeFactory.registerFactory([tagName], HTMLElementFactory.instance);
 
     return function ({ style, ...props }: Omit<Props, "children"> & { style?: CSSStyleDeclaration }, ...children: Props["children"]) {
         //  the function to create this custom element, creates this element

@@ -1,16 +1,19 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import { MyElement } from './MyElement.js'; MyElement;
-import { MyCustomBase } from './MyCustomBase.js'; MyCustomBase;
+import { MyClassElement, myClassElement } from './MyClassElement.js'; import { NodeBlueprint } from '../src/ui/NodeBlueprint.js';
+import { HTMLElementName } from '../src/ui/html/HTMLNodeFactory.js';
+import { customElement } from '../src/ui/html/customElement.js';
+import { p, span } from '../src/ui/html/elements.js';
+MyClassElement;
 
-@customElement('application-root')
-export class ApplicationRoot extends LitElement {
-    render() {
-        const result = html`
-    <p>Application Root Here!</p>
-    <my-custom-base></my-custom-base>
-    <my-element alpha="foo"></my-element>
-    `;
-        return result;
+type Props = { name: string, style?: Partial<CSSStyleDeclaration>, children: (NodeBlueprint<HTMLElementName> | string)[] };
+export const helloElement = customElement(
+    () => {
+        return span(
+            p("P Application Root Here"),
+            myClassElement(),
+        )
+    },
+    {
+        tagName: "application-root"
     }
-}
+);

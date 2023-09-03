@@ -36,6 +36,7 @@ export const span = element("SPAN");
 export const input = element("INPUT");
 export const button = element("BUTTON");
 export const textArea = element("TEXTAREA");
+export const p = element("P");
 export const h1 = element("H1");
 export const h2 = element("H2");
 export const h3 = element("H3");
