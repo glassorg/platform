@@ -41,3 +41,10 @@ export type OptionalKeys<T extends object> = Exclude<{
     ? never
     : K
 }[keyof T], undefined>
+
+type UnionToIntersection<U> =
+    (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
+
+export type NoUnion<Key> =
+    // If this is a simple type UnionToIntersection<Key> will be the same type, otherwise it will an intersection of all types in the union and probably will not extend `Key`
+    [Key] extends [UnionToIntersection<Key>] ? Key : never;

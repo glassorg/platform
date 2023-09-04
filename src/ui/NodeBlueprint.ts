@@ -2,7 +2,7 @@ import { memoize } from "../common/functions.js";
 import { NodeFactory } from "./NodeFactory.js";
 import { NodeChildName, NodeName, NodeProperties, NodeType } from "./NodeTypes.js";
 
-const toLowerCase = memoize((name: string) => name.toLowerCase());
+export const toLowerCase = memoize((name: string) => name.toLowerCase());
 
 export class NodeBlueprint<Name extends NodeName = NodeName> {
     constructor(

@@ -6,6 +6,7 @@ declare module "../NodeTypes.js" {
     export interface NodeNameToType extends HTMLElementUppercaseNameMap {
         "#document": Document
         "#text": Text
+        "HTMLELEMENT": HTMLElement
     }
 
     type HTMLElementUppercaseEmptyNames = "INPUT" | "HR" | "IMG" | "SOURCE";
@@ -15,6 +16,7 @@ declare module "../NodeTypes.js" {
     } & {
         UL: "LI"
         OL: "LI"
+        "HTMLELEMENT": NodeName | "#text"
     } & {
             [K in keyof HTMLElementUppercaseEmptyNames]: never
         }
@@ -159,6 +161,7 @@ declare module "../NodeTypes.js" {
         INPUT: HTMLInputProperties
         BUTTON: HTMLButtonProperties
         TEXTAREA: HTMLTextAreaProperties
+        HTMLELEMENT: HTMLElementProperties
     }
     export interface NodeNameToProperties extends HTMLElementUppercasePropertiesMap {
         "#text": { nodeValue: string }

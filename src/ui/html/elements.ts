@@ -6,7 +6,7 @@ export function text(nodeValue: string): NodeBlueprint<"#text"> {
     return new NodeBlueprint("#text", { nodeValue });
 }
 
-export function element<
+function createBlueprintFactory<
     Name extends HTMLElementName,
 >(type: Name) {
     function create(properties?: NodeProperties<Name>, ...children: (string | NodeBlueprint<NodeChildName<Name>>)[]): NodeBlueprint<Name>
@@ -31,17 +31,18 @@ export function element<
     return create;
 }
 
-export const div = element("DIV");
-export const span = element("SPAN");
-export const input = element("INPUT");
-export const button = element("BUTTON");
-export const textArea = element("TEXTAREA");
-export const p = element("P");
-export const h1 = element("H1");
-export const h2 = element("H2");
-export const h3 = element("H3");
-export const h4 = element("H4");
-export const ol = element("OL");
-export const ul = element("UL");
-export const li = element("LI");
+export const element = createBlueprintFactory("HTMLELEMENT");
+export const div = createBlueprintFactory("DIV");
+export const span = createBlueprintFactory("SPAN");
+export const input = createBlueprintFactory("INPUT");
+export const button = createBlueprintFactory("BUTTON");
+export const textArea = createBlueprintFactory("TEXTAREA");
+export const p = createBlueprintFactory("P");
+export const h1 = createBlueprintFactory("H1");
+export const h2 = createBlueprintFactory("H2");
+export const h3 = createBlueprintFactory("H3");
+export const h4 = createBlueprintFactory("H4");
+export const ol = createBlueprintFactory("OL");
+export const ul = createBlueprintFactory("UL");
+export const li = createBlueprintFactory("LI");
 

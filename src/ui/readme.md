@@ -22,6 +22,10 @@ TODO:
     [-] or .blueprint?
 
 [x] NodeBlueprint: Describes a node type, properties, events and children.
-    [ ] Events?
 [x] NodeFactory: Constructs nodes from NodeBlueprints.
+[ ] Proper type checking of `this` value within functional custom elements.
+[x] Constrain return type of functional render handler to be same type as element base.
+[ ] Connected/Disconnected events
+[ ] Connected/Disconnected hooks
+[ ] Events handling and data typing?
 
