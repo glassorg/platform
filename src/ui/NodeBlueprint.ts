@@ -1,8 +1,17 @@
 import { memoize } from "../common/functions.js";
+import { INode } from "./INode.js";
 import { NodeFactory } from "./NodeFactory.js";
 import { NodeChildName, NodeName, NodeProperties, NodeType } from "./NodeTypes.js";
 
 export const toLowerCase = memoize((name: string) => name.toLowerCase());
+
+function isSameNodeType(node: INode, type: string) {
+    let { nodeName } = node;
+    if (nodeName === type || toLowerCase(nodeName) === type) {
+        return true;
+    }
+    return false;
+}
 
 export class NodeBlueprint<Name extends NodeName = NodeName> {
     constructor(
@@ -24,8 +33,10 @@ export class NodeBlueprint<Name extends NodeName = NodeName> {
         if (this.children) {
             let maybeRecycle = node.firstChild;
             for (let child of this.children) {
-                const canRecycle = maybeRecycle && toLowerCase(maybeRecycle.nodeName) === child.type;
-                // console.log(`canRecycle: ${toLowerCase(maybeRecycle?.nodeName ?? "undefined")} === ${child.type}: ${canRecycle}`);
+                const canRecycle = maybeRecycle && isSameNodeType(maybeRecycle, child.type);
+                if (!canRecycle) {
+                    console.log(`canRecycle: ${maybeRecycle?.nodeName} === ${child.type}: ${canRecycle}`);
+                }
                 if (canRecycle) {
                     child.applyTo(maybeRecycle as NodeType<NodeChildName<Name>>);
                     maybeRecycle = maybeRecycle!.nextSibling;

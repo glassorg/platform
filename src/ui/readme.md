@@ -23,9 +23,9 @@ TODO:
 
 [x] NodeBlueprint: Describes a node type, properties, events and children.
 [x] NodeFactory: Constructs nodes from NodeBlueprints.
-[ ] Proper type checking of `this` value within functional custom elements.
+[x] Proper type checking of `this` value within functional custom elements.
 [x] Constrain return type of functional render handler to be same type as element base.
-[ ] Connected/Disconnected events
-[ ] Connected/Disconnected hooks
-[ ] Events handling and data typing?
+[x] Connected/Disconnected events
+[x] Connected/Disconnected hooks
+[x] Events handling and data typing?
 

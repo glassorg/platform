@@ -16,3 +16,6 @@ export function requestFrame(callback: FrameCallback) {
         })
     }
 }
+export function unrequestFrame(callback: FrameCallback) {
+    requestFrames.delete(callback);
+}

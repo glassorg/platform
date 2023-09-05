@@ -1,7 +1,7 @@
 import { getWebComponentClass } from "../src/ui/html/WebComponent.js";
 import { button, div, li, ul } from "../src/ui/html/elements.js";
 import { useState } from "../src/ui/hooks/useState.js";
-import { helloElement } from "./HelloElement.js";
+import { helloElement, myButton } from "./HelloElement.js";
 import { NodeBlueprint } from "../src/ui/NodeBlueprint.js";
 
 export class MyClassElement extends getWebComponentClass() {
@@ -10,7 +10,7 @@ export class MyClassElement extends getWebComponentClass() {
         const [count, setCount] = useState(0);
         const [name, setName] = useState("name");
         return (
-            div({ style: { color: "orange" } }, `Custom Div Content!`,
+            div({ style: { color: "pink" } }, `Custom Div Content!`,
                 ul(
                     li({ style: { color: "red" } }, "Foo"),
                     li({ style: { color: "blue" } }, "Bar"),

@@ -3,7 +3,7 @@ import { customElement } from '../src/ui/html/customElement.js';
 import { element, p } from '../src/ui/html/elements.js';
 
 export const applicationRoot = customElement(
-    () => {
+    function () {
         return element(
             p("P Application Root Here"),
             myClassElement(),

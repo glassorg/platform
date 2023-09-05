@@ -1,5 +1,5 @@
 import { memoize } from "../../common/functions.js";
-import { requestFrame } from "../../common/requestFrame.js";
+import { requestFrame, unrequestFrame } from "../../common/requestFrame.js";
 import { INode } from "../INode.js";
 import { NodeBlueprint } from "../NodeBlueprint.js";
 import { NodeType } from "../NodeTypes.js";
@@ -35,7 +35,6 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
                 super();
                 this.hooks = [];
                 this.renderAndApply = this.renderAndApply.bind(this);
-                // console.log(`${this.tagName}.constructor`);
             }
 
             public invalidate() {
@@ -46,10 +45,13 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
             connectedCallback() {
                 // console.log(`${this.tagName}.connectedCallback`);
                 this.invalidate();
+                this.dispatchEvent(new CustomEvent("connected", { bubbles: false }));
             }
 
             disconnectedCallback() {
                 // console.log(`${this.tagName}.disconnectedCallback`);
+                unrequestFrame(this.renderAndApply);
+                this.dispatchEvent(new CustomEvent("disconnected", { bubbles: false }));
             }
 
             attributeChangedCallback() {
@@ -58,6 +60,9 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
             }
 
             private renderAndApply() {
+                if (!this.isConnected) {
+                    return;
+                }
                 // console.log(`${this.tagName}.renderAndApply BEGIN`, this);
 
                 this.hookIndex = 0;
@@ -82,4 +87,11 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
 const renderStack: WebComponent[] = [];
 export function getCurrentWebComponent() {
     return renderStack[renderStack.length - 1];
+}
+
+declare global {
+    interface GlobalEventHandlersEventMap {
+        connected: Event;
+        disconnected: Event;
+    }
 }

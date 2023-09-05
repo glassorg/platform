@@ -1,10 +1,10 @@
 import { WebComponent, getCurrentWebComponent } from "../html/WebComponent.js";
 import { arraysEqualShallow } from "../../common/arraysEqualShallow.js";
 
-type EffectCallback<T extends WebComponent> = (this: T) => (void | (() => void));
+export type EffectCallback = () => (void | (() => void));
 type EffectHookState = { dispose?: () => void, dependencies: any[] };
 
-export function useEffect<T extends WebComponent>(callback: EffectCallback<T>, dependencies: any[] = []) {
+export function useEffect<T extends WebComponent>(callback: EffectCallback, dependencies: any[] = []) {
     const component = getCurrentWebComponent() as T;
     const hookIndex = component.hookIndex++;
     const oldHookState = component.hooks[hookIndex] as EffectHookState | undefined;

@@ -1,6 +1,8 @@
+import { MyClassElement } from "../../../web/MyClassElement.js";
 import { assignIfDifferent } from "../../common/functions.js";
+import { INode } from "../INode.js";
 import { NodeFactory } from "../NodeFactory.js";
-import { NodeName, NodeNameToType, NodeProperties, NodeType } from "../NodeTypes.js";
+import { HTMLButtonProperties, HTMLElementProperties, HTMLInputProperties, HTMLTextAreaProperties, NodeName, NodeNameToType, NodeProperties, NodeType } from "../NodeTypes.js";
 
 export class HTMLElementFactory extends NodeFactory<HTMLElementName> {
 
@@ -17,10 +19,16 @@ export class HTMLElementFactory extends NodeFactory<HTMLElementName> {
 
 }
 
-export class TextFactory extends NodeFactory {
+export class TextFactory extends NodeFactory<"#text"> {
 
-    public createNode<Name extends keyof NodeNameToType>(ofType: Name): NodeType<Name> {
-        return new Text() as NodeType<Name>;
+    public createNode(ofType: "#text"): NodeType<"#text"> {
+        return new Text() as NodeType<"#text">;
+    }
+
+    public override apply(to: NodeType<"#text">, { nodeValue }: NodeProperties<"#text">): void {
+        if (to.nodeValue !== nodeValue) {
+            to.nodeValue = nodeValue;
+        }
     }
 
     public static readonly instance = new TextFactory();
