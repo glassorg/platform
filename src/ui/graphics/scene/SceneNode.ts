@@ -7,7 +7,14 @@ import PickResult from "./PickResult.js"
 import Matrix4 from "../../math/Matrix4.js"
 import Effect from "../effects/Effect.js"
 
-export default class Node extends VirtualNode {
+export interface SceneNodeProps {
+    boundingShape?: BoundingShape
+    pickable?: Pickable
+    transform?: Matrix4
+    effect?: Effect | null
+}
+
+export default class SceneNode extends VirtualNode {
 
     _boundingShape?: BoundingShape
     _pickable?: Pickable
@@ -54,7 +61,7 @@ export default class Node extends VirtualNode {
     public update(g: Graphics): boolean {
         let animating = false
         let localTransform = this.transform
-        let parentTransform = this.parentNode instanceof Node ? this.parentNode.worldTransform : null
+        let parentTransform = this.parentNode instanceof SceneNode ? this.parentNode.worldTransform : null
         let worldTransform = this.calculateWorldTransform(parentTransform, localTransform)
         if (this.worldTransform !== worldTransform) {
             this.worldTransform = worldTransform
@@ -75,7 +82,7 @@ export default class Node extends VirtualNode {
     protected updateChildren(g: Graphics) {
         let animating = false
         for (let node = this.firstChild; node != null; node = node.nextSibling!) {
-            if (node instanceof Node) {
+            if (node instanceof SceneNode) {
                 if (node.update(g)) {
                     animating = true
                 }
@@ -108,7 +115,7 @@ export default class Node extends VirtualNode {
 
     protected drawChildren(g: Graphics) {
         for (let node = this.firstChild; node != null; node = node.nextSibling) {
-            if (node instanceof Node) {
+            if (node instanceof SceneNode) {
                 node.render(g)
             }
         }
@@ -156,7 +163,7 @@ export default class Node extends VirtualNode {
         for (let child = reverse ? this.lastChild : this.firstChild;
             child != null;
             child = reverse ? child.previousSibling : child.nextSibling) {
-            if (child instanceof Node) {
+            if (child instanceof SceneNode) {
                 let result = child.pick(ray)
                 if (result != null) {
                     return result

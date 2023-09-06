@@ -32,6 +32,7 @@ function createBlueprintFactory<
 }
 
 export const element = createBlueprintFactory("HTMLELEMENT");
+export const canvas = createBlueprintFactory("CANVAS");
 export const div = createBlueprintFactory("DIV");
 export const span = createBlueprintFactory("SPAN");
 export const input = createBlueprintFactory("INPUT");

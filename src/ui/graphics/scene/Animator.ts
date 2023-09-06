@@ -1,7 +1,13 @@
-import Node from "./Node.js";
+import SceneNode from "./SceneNode.js";
 import Graphics from "../Graphics.js";
 
-export default class Animator<T> extends Node {
+export interface AnimatorProps<T> {
+    source: (time: number) => T
+    target?: any
+    property: any
+}
+
+export default class Animator<T> extends SceneNode {
 
     source!: (time: number) => T
     target?: any

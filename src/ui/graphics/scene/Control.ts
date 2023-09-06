@@ -1,5 +1,5 @@
 import Graphics from "../Graphics.js"
-import Node from "./Node.js"
+import SceneNode, { SceneNodeProps } from "./SceneNode.js"
 import Color from "../../math/Color.js"
 import Capsule from "../../math/Capsule.js"
 import Rectangle from "../../math/Rectangle.js"
@@ -15,7 +15,30 @@ import Graphics2D from "../Graphics2D.js"
 
 type LayoutFunction = (container: Control) => void
 
-export default class Control extends Node {
+export interface ControlProps extends SceneNodeProps {
+    x?: number
+    y?: number
+    width?: number
+    height?: number
+    backgroundColor?: Color
+    backgroundImage?: string | TextureBase
+    color?: Color
+    margin?: Spacing
+    padding?: Spacing
+    pickRadius?: number
+    minimumSize?: Size
+    maximumSize?: Size
+    optimumSize?: Size
+    text?: string
+    fontSize?: number
+    size?: Size
+    bounds?: Rectangle
+    position?: Vector3
+    layoutChildren?: LayoutFunction
+    layout?: any
+}
+
+export default class Control extends SceneNode {
 
     private _x!: number
     private _y!: number

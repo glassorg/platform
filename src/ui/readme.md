@@ -28,4 +28,9 @@ TODO:
 [x] Connected/Disconnected events
 [x] Connected/Disconnected hooks
 [x] Events handling and data typing?
+[x] Make SceneNode Factory and register
+[x] Change Node to SceneNode
+[/] Make some 2d rendering work in the graphicsCanvas
+[ ] Get invalidation/re-rendering working.
+[ ] Convert tagName map back to lower case?
 

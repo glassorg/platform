@@ -34,9 +34,9 @@ export class NodeBlueprint<Name extends NodeName = NodeName> {
             let maybeRecycle = node.firstChild;
             for (let child of this.children) {
                 const canRecycle = maybeRecycle && isSameNodeType(maybeRecycle, child.type);
-                if (!canRecycle) {
-                    console.log(`canRecycle: ${maybeRecycle?.nodeName} === ${child.type}: ${canRecycle}`);
-                }
+                // if (!canRecycle) {
+                //     console.log(`canRecycle: ${maybeRecycle?.nodeName} === ${child.type}: ${canRecycle}`);
+                // }
                 if (canRecycle) {
                     child.applyTo(maybeRecycle as NodeType<NodeChildName<Name>>);
                     maybeRecycle = maybeRecycle!.nextSibling;
@@ -44,7 +44,8 @@ export class NodeBlueprint<Name extends NodeName = NodeName> {
                 else {
                     const newChildNode = child.applyTo();
                     if (maybeRecycle) {
-                        node.replaceChild(newChildNode, maybeRecycle);
+                        node.insertBefore(newChildNode, maybeRecycle);
+                        node.removeChild(maybeRecycle);
                         maybeRecycle = newChildNode.nextSibling;
                     }
                     else {

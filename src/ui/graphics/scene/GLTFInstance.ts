@@ -1,8 +1,8 @@
-import Node from "./Node.js"
+import SceneNode from "./SceneNode.js"
 import Graphics3D from "../Graphics3D.js"
 import GLTFModel from "../GLTFModel.js"
 
-export default class GLTFInstance extends Node {
+export default class GLTFInstance extends SceneNode {
 
     source!: string
 

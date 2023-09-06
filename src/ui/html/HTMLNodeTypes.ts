@@ -12,11 +12,12 @@ declare module "../NodeTypes.js" {
     type HTMLElementUppercaseEmptyNames = "INPUT" | "HR" | "IMG" | "SOURCE";
 
     type HTMLElementUppercaseChildMap = {
-        [K in keyof Omit<HTMLElementUppercaseNameMap, "UL" | "OL" | HTMLElementUppercaseEmptyNames>]: NodeName | "#text"
+        [K in keyof Omit<HTMLElementUppercaseNameMap, "UL" | "OL" | "CANVAS" | HTMLElementUppercaseEmptyNames>]: NodeName | "#text"
     } & {
-        UL: "LI"
-        OL: "LI"
-        "HTMLELEMENT": NodeName | "#text"
+        UL: "LI",
+        OL: "LI",
+        CANVAS: NodeName,
+        "HTMLELEMENT": NodeName | "#text",
     } & {
             [K in keyof HTMLElementUppercaseEmptyNames]: never
         }
@@ -155,13 +156,19 @@ declare module "../NodeTypes.js" {
         wrap?: string;
     }
 
+    interface HTMLCanvasProperties extends HTMLElementProperties {
+        width: number;
+        height: number;
+    }
+
     type HTMLElementUppercasePropertiesMap = {
-        [K in keyof Omit<HTMLElementUppercaseNameMap, "INPUT" | "BUTTON" | "TEXTAREA">]: HTMLElementProperties
+        [K in keyof Omit<HTMLElementUppercaseNameMap, "INPUT" | "BUTTON" | "TEXTAREA" | "CANVAS">]: HTMLElementProperties
     } & {
         INPUT: HTMLInputProperties
         BUTTON: HTMLButtonProperties
         TEXTAREA: HTMLTextAreaProperties
         HTMLELEMENT: HTMLElementProperties
+        CANVAS: HTMLCanvasProperties
     }
     export interface NodeNameToProperties extends HTMLElementUppercasePropertiesMap {
         "#text": { nodeValue: string }

@@ -4,6 +4,14 @@ import Invalidatable from "../graphics/Invalidatable.js"
 
 export function extendElementAsVirtualNodeRoot<T>(element: T): T & INode {
     return Object.defineProperties(element, {
+        previousSibling: {
+            writable: true,
+            value: null,
+        },
+        nextSibling: {
+            writable: true,
+            value: null,
+        },
         firstChild: {
             writable: true,
             value: null

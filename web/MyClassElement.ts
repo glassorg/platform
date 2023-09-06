@@ -1,7 +1,7 @@
 import { getWebComponentClass } from "../src/ui/html/WebComponent.js";
 import { button, div, li, ul } from "../src/ui/html/elements.js";
 import { useState } from "../src/ui/hooks/useState.js";
-import { helloElement, myButton } from "./HelloElement.js";
+import { helloElement } from "./HelloElement.js";
 import { NodeBlueprint } from "../src/ui/NodeBlueprint.js";
 
 export class MyClassElement extends getWebComponentClass() {

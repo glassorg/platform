@@ -48,7 +48,7 @@ export class AbstractElementFactory extends NodeFactory {
 
 export const htmlElementNames = [
     "HTMLELEMENT",
-    "A", "SPAN", "DIV", "INPUT", "TEXTAREA", "BUTTON", "P", "SELECT", "UL", "OL", "LI", "HR", "H1", "H2", "H3", "H4", "H5", "H6"
+    "A", "SPAN", "CANVAS", "DIV", "INPUT", "TEXTAREA", "BUTTON", "P", "SELECT", "UL", "OL", "LI", "HR", "H1", "H2", "H3", "H4", "H5", "H6"
 ] as const satisfies ReadonlyArray<NodeName>;
 
 export type HTMLElementName = (typeof htmlElementNames)[number];

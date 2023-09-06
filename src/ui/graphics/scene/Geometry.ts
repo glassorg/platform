@@ -1,8 +1,14 @@
-import Node from "./Node.js"
+import SceneNode, { SceneNodeProps } from "./SceneNode.js"
 import Graphics3D from "../Graphics3D.js"
 import DataBuffer from "../DataBuffer.js"
 
-export default class Geometry extends Node {
+export interface GeometryProps extends SceneNodeProps {
+    buffer?: DataBuffer
+    load?: (g: Graphics3D) => DataBuffer
+    instance?: number[]
+}
+
+export default class Geometry extends SceneNode {
 
     buffer!: DataBuffer
     load?: (g: Graphics3D) => DataBuffer
