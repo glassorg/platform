@@ -5,6 +5,7 @@ import Graphics3D from "../Graphics3D.js";
 import Matrix4 from "../../math/Matrix4.js";
 import Dock from "./Dock.js";
 import Program from "../Program.js";
+import { NodeName } from "../../NodeTypes.js";
 
 export interface ScreenProps extends ControlProps {
     depth?: number;
@@ -22,6 +23,8 @@ export default class Screen extends Control {
         super();
         this.effect = Program.default2D;
     }
+
+    get nodeName(): NodeName { return "Screen" }
 
     draw(g: Graphics) {
         g.clear(this.backgroundColor, this.depth);

@@ -6,6 +6,7 @@ import Pickable from "./Pickable.js"
 import PickResult from "./PickResult.js"
 import Matrix4 from "../../math/Matrix4.js"
 import Effect from "../effects/Effect.js"
+import { NodeName } from "../../NodeTypes.js"
 
 export interface SceneNodeProps {
     boundingShape?: BoundingShape
@@ -15,6 +16,8 @@ export interface SceneNodeProps {
 }
 
 export default class SceneNode extends VirtualNode {
+
+    get nodeName(): NodeName { return "SceneNode" }
 
     _boundingShape?: BoundingShape
     _pickable?: Pickable

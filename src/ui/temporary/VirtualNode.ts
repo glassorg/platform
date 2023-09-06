@@ -44,9 +44,7 @@ export default abstract class VirtualNode implements INode, Invalidatable {
     properties?: any
     isDirty: boolean = false
 
-    get nodeName(): NodeName {
-        return "virtual-node" as NodeName;
-    }
+    abstract nodeName: NodeName
 
     // composition methods compatible with Html Node
     appendChild<T extends INode>(child: T): T {
@@ -101,6 +99,7 @@ export default abstract class VirtualNode implements INode, Invalidatable {
             }
         }
         child.parentNode = this
+        console.log(`set parentNode`, child)
         return child
     }
 

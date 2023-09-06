@@ -12,6 +12,7 @@ import PickResult from "./PickResult.js"
 import Matrix4 from "../../math/Matrix4.js"
 import TextureBase from "../TextureBase.js"
 import Graphics2D from "../Graphics2D.js"
+import { NodeName } from "../../NodeTypes.js"
 
 type LayoutFunction = (container: Control) => void
 
@@ -64,6 +65,8 @@ export default class Control extends SceneNode {
      * Layout options for self.
      */
     layout?: any
+
+    get nodeName(): NodeName { return "Control" }
 
     //  This assigns the values to the prototype, rather than initializing within the constructor.
     //  This is more performant AND it means we can check the prototype for default values.

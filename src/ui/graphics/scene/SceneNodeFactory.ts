@@ -17,7 +17,6 @@ export class SceneNodeFactory extends NodeFactory<SceneNodeName> {
 
     public apply(to: (INode & Animator<any>) | (INode & Control) | (INode & Geometry) | (INode & Screen) | (INode & View) | (INode & SceneNode), properties: AnimatorProps<any> | ControlProps | SceneNodeProps | GeometryProps | ScreenProps | ViewProps): void {
         super.apply(to, properties);
-        console.log(`invalidate`, to);
         to.invalidate();
     }
 
