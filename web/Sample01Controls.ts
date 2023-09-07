@@ -1,4 +1,4 @@
-import { button, div, element } from "../src/ui/html/elements.js";
+import { button, div, element, h1 } from "../src/ui/html/elements.js";
 import { customElement } from "../src/ui/html/customElement.js";
 import { NodeBlueprint } from "../src/ui/NodeBlueprint.js";
 import { graphicsCanvas } from "../src/ui/graphics/Canvas.js";
@@ -6,15 +6,15 @@ import { screen } from "../src/ui/graphics/scene/sceneNodes.js";
 import Color from "../src/ui/math/Color.js";
 import { useState } from "../src/ui/hooks/useState.js";
 
-export const helloElement = customElement(
-    function ({ name, children }: { name: string, children: NodeBlueprint[] }) {
-        console.log(`helloElement`, this);
+// const hoverControl = custom
+
+export const sample01Controls = customElement(
+    function () {
         const [count, setCount] = useState(0);
         return (
             element({ style: { color: "purple", border: "solid 1px blue", display: "block" } },
-                `Hello ${name}! `,
-                div({ style: { color: "red" } }, ...children),
-                myButton({}, "My Button Content"),
+                h1(`Sample 01 Controls `),
+                div({ style: { color: "red" } }),
                 div(
                     {
                         onclick(e) {
@@ -29,12 +29,4 @@ export const helloElement = customElement(
             )
         );
     }, { tagName: "hello-element" }
-)
-
-export const myButton = customElement(
-    function (props: { children: NodeBlueprint<"UL" | "#text">[] }) {
-        console.log(`myButton`, this);
-        return button({ style: { color: "red" } }, ...props.children);
-    },
-    { extends: "BUTTON", nodeName: "my-button" }
 )

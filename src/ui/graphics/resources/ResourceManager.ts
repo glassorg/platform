@@ -35,7 +35,7 @@ export default class ResourceManager {
     public load<T>(loader: ResourceLoader<T>, id: string): Promise<T> {
         return new Promise((resolve, reject) => {
             let result = this.get(loader, id, {
-                invalidate(value: T) {
+                markDirty(value: T) {
                     resolve(value)
                 }
             })
@@ -52,7 +52,7 @@ export default class ResourceManager {
             loader.load(this.g, id).then(value => {
                 info.value = value
                 for (let dependent of info.dependents.values()) {
-                    dependent.invalidate(value)
+                    dependent.markDirty(value)
                 }
             }).catch(e => {
                 console.error(`Error loading resource '${id}':`, e)

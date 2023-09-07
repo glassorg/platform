@@ -2,16 +2,14 @@ import { memoize } from "../../common/functions.js";
 import { requestFrame, unrequestFrame } from "../../common/requestFrame.js";
 import { INode } from "../INode.js";
 import { NodeBlueprint } from "../NodeBlueprint.js";
-import { NodeType } from "../NodeTypes.js";
+import { NodeName, NodeType } from "../NodeTypes.js";
 import Invalidatable from "../graphics/Invalidatable.js";
-import { HTMLElementName } from "./HTMLNodeFactory.js";
-import "./HTMLNodeFactory.js"
 
-abstract class AbstractRender<Name extends HTMLElementName> {
+abstract class AbstractRender<Name extends NodeName> {
     abstract render(): NodeBlueprint<Name>;
 }
 
-export type WebComponent<Name extends HTMLElementName = HTMLElementName> = NodeType<Name> & HTMLElement & Invalidatable & AbstractRender<Name> & INode & {
+export type WebComponent<Name extends NodeName = NodeName> = NodeType<Name> & Invalidatable & AbstractRender<Name> & INode & {
     hookIndex: number;
     readonly hooks: any[];
 };
@@ -19,13 +17,8 @@ export type WebComponent<Name extends HTMLElementName = HTMLElementName> = NodeT
 export function isWebComponent(value): value is WebComponent {
     return typeof value.hookIndex === "number";
 }
-
-export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name) => (new () => HTMLElement & Invalidatable) = memoize(
-    <Name extends HTMLElementName>(tagName?: string) => {
-        const baseClass = tagName
-            ? document.createElement(tagName).constructor as any as typeof HTMLElement
-            : HTMLElement;
-
+export const getWebComponentClass: <Base extends (new () => INode) >(baseClass: Base) => (new () => InstanceType<Base> & Invalidatable) = memoize(
+    <Base extends (new () => INode)>(baseClass) => {
         abstract class WebComponent extends baseClass {
 
             public hookIndex: number = 0;
@@ -68,8 +61,8 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
                 this.hookIndex = 0;
                 renderStack.push(this as any);
                 try {
-                    let blueprint = this.render();
-                    blueprint.applyTo(this as unknown as NodeType<Name>);
+                    let blueprint = this.createBlueprints();
+                    blueprint.applyTo(this as any);
                 }
                 finally {
                     renderStack.pop();
@@ -77,10 +70,20 @@ export const getWebComponentClass: <Name extends HTMLElementName>(tagName?: Name
                 }
             }
 
-            abstract render(): NodeBlueprint<Name>;
+            abstract createBlueprints(): NodeBlueprint;
 
         }
         return WebComponent as any;
+    }
+)
+
+export const getWebComponentClassByNodeName: <Name extends NodeName>(nodeName?: Name) => (new () => INode & Invalidatable) = memoize(
+    <Name extends NodeName>(nodeName?: string) => {
+        const baseClass = nodeName
+            ? document.createElement(nodeName).constructor as any as typeof HTMLElement
+            : HTMLElement;
+
+        return getWebComponentClass(baseClass as any);
     }
 )
 

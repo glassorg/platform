@@ -1,28 +1,32 @@
 import { INode } from "../../INode.js";
 import { NodeFactory } from "../../NodeFactory.js";
-import { NodeType } from "../../NodeTypes.js";
-import Animator, { AnimatorProps } from "./Animator.js";
-import Control, { ControlProps } from "./Control.js";
-import Geometry, { GeometryProps } from "./Geometry.js";
-import SceneNode, { SceneNodeProps } from "./SceneNode.js";
+import { NodeName, NodeType } from "../../NodeTypes.js";
+import VirtualNode from "../../VirtualNode.js";
+import Invalidatable from "../Invalidatable.js";
 import { SceneNodeName, sceneNodeNameToType, sceneNodeNames } from "./SceneNodeTypes.js";
-import Screen, { ScreenProps } from "./Screen.js";
-import View, { ViewProps } from "./View.js";
 
-export class SceneNodeFactory extends NodeFactory<SceneNodeName> {
+export class SceneNodeFactory extends NodeFactory {
+
+    constructor(
+        private readonly classConstructor: new () => INode & Invalidatable
+    ) {
+        super();
+    }
 
     public createNode(ofType: SceneNodeName) {
-        return new sceneNodeNameToType[ofType]() as any as NodeType<SceneNodeName>;
+        return new this.classConstructor() as any;
     }
 
-    public apply(to: (INode & Animator<any>) | (INode & Control) | (INode & Geometry) | (INode & Screen) | (INode & View) | (INode & SceneNode), properties: AnimatorProps<any> | ControlProps | SceneNodeProps | GeometryProps | ScreenProps | ViewProps): void {
-        super.apply(to, properties);
-        to.invalidate();
+    public apply(to: NodeType<NodeName> & VirtualNode & Invalidatable, properties: any): void {
+        // TODO: only mark dirty if changed.
+        super.apply(to as any, properties);
+        to.markDirty();
     }
-
-    public static readonly instance = new SceneNodeFactory();
 
 }
 
-NodeFactory.registerFactory(sceneNodeNames, SceneNodeFactory.instance);
-
+for (let name of sceneNodeNames) {
+    let type = sceneNodeNameToType[name];
+    console.log(`register`, name, type);
+    NodeFactory.registerFactory([name as any], new SceneNodeFactory(type as any));
+}

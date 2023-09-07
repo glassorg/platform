@@ -1,4 +1,4 @@
-import VirtualNode from "../../temporary/VirtualNode.js"
+import VirtualNode from "../../VirtualNode.js"
 import Graphics from "../Graphics.js"
 import Capsule from "../../math/Capsule.js"
 import BoundingShape from "../../math/BoundingShape.js"

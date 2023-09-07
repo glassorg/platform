@@ -1,6 +1,5 @@
-import { INode } from "../INode.js";
-import { NodeName } from "../NodeTypes.js";
-import Invalidatable from "../graphics/Invalidatable.js"
+import { INode } from "./INode.js";
+import { NodeName } from "./NodeTypes.js";
 
 export function extendElementAsVirtualNodeRoot<T>(element: T): T & INode {
     return Object.defineProperties(element, {
@@ -32,7 +31,7 @@ export function extendElementAsVirtualNodeRoot<T>(element: T): T & INode {
     }) as any;
 }
 
-export default abstract class VirtualNode implements INode, Invalidatable {
+export default abstract class VirtualNode implements INode {
 
     id?: string
     parentNode: INode | null = null
@@ -103,11 +102,37 @@ export default abstract class VirtualNode implements INode, Invalidatable {
         return child
     }
 
-    invalidate() {
+    get isConnected() {
+        return this.parentNode?.isConnected ?? false;
+    }
+
+    /**
+     * Flags this node and all clean ancestors as dirty.
+     */
+    markDirty() {
         for (let node: INode | null = this; node != null && node.isDirty === false; node = node.parentNode) {
             node.isDirty = true
         }
     }
 
+    addEventListener(
+        type: string,
+        listener: EventListener | EventListenerObject,
+        options?: AddEventListenerOptions | boolean,
+    ): void {
+
+    }
+    /** Dispatches a synthetic event event to target and returns true if either event's cancelable attribute value is false or its preventDefault() method was not invoked, and false otherwise. */
+    dispatchEvent(event: Event): boolean {
+        return false;
+    }
+    /** Removes the event listener in target's event listener list with the same type, callback, and options. */
+    removeEventListener(
+        type: string,
+        listener: EventListener | EventListenerObject,
+        options?: EventListenerOptions | boolean,
+    ): void {
+
+    }
 
 }

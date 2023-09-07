@@ -1,6 +1,7 @@
 
 type Invalidatable = {
-    invalidate(...args)
+    invalidate(...args: any[]);
+    markDirty?();
 }
 
 export default Invalidatable

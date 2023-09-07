@@ -1,5 +1,5 @@
 import { NodeBlueprint, toLowerCase } from "../NodeBlueprint.js";
-import { getWebComponentClass } from "./WebComponent.js";
+import { getWebComponentClassByNodeName } from "./WebComponent.js";
 import { HTMLElementFactory, HTMLElementName } from "./HTMLNodeFactory.js";
 import { NodeName, NodeType } from "../NodeTypes.js";
 import { objectsEqualShallow } from "../../common/arraysEqualShallow.js";
@@ -10,8 +10,8 @@ import { NodeFactory } from "../NodeFactory.js";
 type CustomElementProps = { style?: Partial<CSSStyleDeclaration>, children?: NodeBlueprint[] | undefined };
 
 type ReturnType<Props extends CustomElementProps> = (
-    props: Omit<Props, "children">,
-    ...children: Props["children"] extends NodeBlueprint<infer ChildNames>[] ? ("#text" extends ChildNames ? ((NodeBlueprint<ChildNames> | string)[] | Props["children"]) : Props["children"]) : never
+    props?: Omit<Props, "children">,
+    ...children: Props["children"] extends NodeBlueprint<infer ChildNames>[] ? ("#text" extends ChildNames ? ((NodeBlueprint<ChildNames> | string)[] | Props["children"]) : Props["children"]) : never[]
 ) => NodeBlueprint;
 
 let defineCount = 0;
@@ -24,12 +24,12 @@ export function customElement<Props extends CustomElementProps>(
 export function customElement<Props extends CustomElementProps, Name extends HTMLElementName>(
     render: ((this: NodeType<NoUnion<Name>>, props: Props) => NodeBlueprint<NoUnion<Name>>),
     options: {
-        tagName?: string,
+        nodeName?: string,
         extends: NoUnion<Name>,
     }
 ): ReturnType<Props>
 export function customElement<Props extends CustomElementProps, Name extends HTMLElementName = "SPAN">(
-    render: ((props: Props) => NodeBlueprint<Name>),
+    createBlueprints: ((props: Props) => NodeBlueprint<Name>),
     options: {
         tagName?: string,
         extends?: Name,
@@ -38,7 +38,7 @@ export function customElement<Props extends CustomElementProps, Name extends HTM
     const {
         tagName = `component-${defineCount++}`,
     } = options;
-    const baseClass = getWebComponentClass<Name>(options.extends);
+    const baseClass = getWebComponentClassByNodeName<Name>(options.extends);
     class FunctionalWebComponent extends baseClass {
         private _properties?: Props;
         get properties(): Props {
@@ -51,18 +51,14 @@ export function customElement<Props extends CustomElementProps, Name extends HTM
             }
         }
 
-        constructor() {
-            super();
-        }
-
-        render(): NodeBlueprint<Name> {
+        createBlueprints(): NodeBlueprint<Name> {
             // the blueprint returned by render WILL be applied directly to this node.
-            return render.call(this, this.properties);
+            return createBlueprints.call(this, this.properties);
         }
     }
 
     //  this must be called before a webcomponent can be constructed or you get an Illegal constructor error
-    customElements.define(tagName, FunctionalWebComponent, { extends: options.extends?.toLowerCase() });
+    customElements.define(tagName, FunctionalWebComponent as any, { extends: options.extends?.toLowerCase() });
 
     //  if this extends a built in type then we must register a custom element factory to create it.
     if (options.extends) {

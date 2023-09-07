@@ -1,10 +1,10 @@
-import { getWebComponentClass } from "../src/ui/html/WebComponent.js";
+import { getWebComponentClassByNodeName } from "../src/ui/html/WebComponent.js";
 import { button, div, li, ul } from "../src/ui/html/elements.js";
 import { useState } from "../src/ui/hooks/useState.js";
 import { helloElement } from "./HelloElement.js";
 import { NodeBlueprint } from "../src/ui/NodeBlueprint.js";
 
-export class MyClassElement extends getWebComponentClass() {
+export class MyClassElement extends getWebComponentClassByNodeName() {
 
     render() {
         const [count, setCount] = useState(0);
@@ -29,7 +29,7 @@ export class MyClassElement extends getWebComponentClass() {
     }
 }
 const myCustomBaseTagName = "my-class-element";
-customElements.define(myCustomBaseTagName, MyClassElement);
+customElements.define(myCustomBaseTagName, MyClassElement as any);
 
 declare module "../src/ui/NodeTypes.js" {
     export interface NodeNameToType {

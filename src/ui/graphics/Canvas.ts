@@ -7,7 +7,7 @@ import Graphics from "./Graphics.js";
 import Graphics2D from "./Graphics2D.js";
 import Graphics3D from "./Graphics3D.js";
 import { layout } from "./scene/Dock.js";
-import { extendElementAsVirtualNodeRoot } from "../temporary/VirtualNode.js";
+import { extendElementAsVirtualNodeRoot } from "../VirtualNode.js";
 import { customElement } from "../html/customElement.js";
 import { canvas, element } from "../html/elements.js";
 import { NodeBlueprint } from "../NodeBlueprint.js";

@@ -21,6 +21,7 @@ export function useConnected(callback: EffectCallback, dependencies?: []) {
         }
     }
 
+    //  TODO
     if (component.isConnected) {
         onConnect();
     }

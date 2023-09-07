@@ -31,6 +31,10 @@ TODO:
 [x] Make SceneNode Factory and register
 [x] Change Node to SceneNode
 [/] Make some 2d rendering work in the graphicsCanvas
-[ ] Get invalidation/re-rendering working.
+[x] Get invalidation/re-rendering working.
 [ ] Convert tagName map back to lower case?
-
+[ ] Need ability to write customSceneNode, similar to customElement with hooks.
+[x] Invalidate for re-create component function vs invalidate for request re-render.
+[x] isConnected on VirtualNode... not high performance.
+[x] VirtualNode extends EventSource/Target
+[ ] Convert to NodeBuilder classes.
